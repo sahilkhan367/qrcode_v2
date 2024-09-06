@@ -202,33 +202,33 @@ def convert_to_dictionary(string):
         return None
 
 
-def system_status():
-    if is_connected():
-        print("Raspberry Pi is connected to the internet.")
-        button_press_time=datetime.now().time()
-        button_press_date=datetime.now().date()
-        print("-------Status Running-----")
-        #strat_time=time()
-        #intervals=60
-        while True:
-            #current_time=time()
-            #elapsed_time=current_time-start_time
-            #if elapsed_time>=intervals:
-                data3_to_send={
-                "doctype":"Sytemstatus",
-                "status":"Running",
-	            "time":button_press_time.strftime("%H:%M"),
-                "date":button_press_date.strftime("%Y-%m-%d"),
-                }
-                api_url=f"{base_url}/api/resource/Systemstatus"
-                response=requests.post(api_url, json=data3_to_send,headers=headers)
-                if response.status_code==200:
-                    print("---Status running Succesfully----")
-                else:
-                    print("Error:", response.text)
-                sleep(600)
-    else:
-        print("system status Not connected to internet")
+# def system_status():
+#     if is_connected():
+#         print("Raspberry Pi is connected to the internet.")
+#         button_press_time=datetime.now().time()
+#         button_press_date=datetime.now().date()
+#         print("-------Status Running-----")
+#         #strat_time=time()
+#         #intervals=60
+#         while True:
+#             #current_time=time()
+#             #elapsed_time=current_time-start_time
+#             #if elapsed_time>=intervals:
+#                 data3_to_send={
+#                 "doctype":"Sytemstatus",
+#                 "status":"Running",
+# 	            "time":button_press_time.strftime("%H:%M"),
+#                 "date":button_press_date.strftime("%Y-%m-%d"),
+#                 }
+#                 api_url=f"{base_url}/api/resource/Systemstatus"
+#                 response=requests.post(api_url, json=data3_to_send,headers=headers)
+#                 if response.status_code==200:
+#                     print("---Status running Succesfully----")
+#                 else:
+#                     print("Error:", response.text)
+#                 sleep(600)
+#     else:
+#         print("system status Not connected to internet")
 
 def decrypt(qr_code):
     parmanent_key = b'OVEluxTreMrz529vuP5Zi5AdCwPo1V8MZ1adFWUJQ2w='
@@ -369,8 +369,8 @@ def main():
     blue.off()
 
 if __name__ == "__main__":
-    secondary_thread=threading.Thread(target=system_status)
-    secondary_thread.daemon=True
-    secondary_thread.start()
+    # secondary_thread=threading.Thread(target=system_status)
+    # secondary_thread.daemon=True
+    # secondary_thread.start()
     main()
     process_other.start()
