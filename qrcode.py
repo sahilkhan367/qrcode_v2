@@ -203,28 +203,32 @@ def convert_to_dictionary(string):
 
 
 def system_status():
-    button_press_time=datetime.now().time()
-    button_press_date=datetime.now().date()
-    print("-------Status Running-----")
-    #strat_time=time()
-    #intervals=60
-    while True:
-        #current_time=time()
-        #elapsed_time=current_time-start_time
-        #if elapsed_time>=intervals:
-            data3_to_send={
-            "doctype":"Sytemstatus",
-            "status":"Running",
-	    "time":button_press_time.strftime("%H:%M"),
-            "date":button_press_date.strftime("%Y-%m-%d"),
-            }
-            api_url=f"{base_url}/api/resource/Systemstatus"
-            response=requests.post(api_url, json=data3_to_send,headers=headers)
-            if response.status_code==200:
-                print("---Status running Succesfully----")
-            else:
-                print("Error:", response.text)
-            sleep(600)
+    if is_connected():
+        print("Raspberry Pi is connected to the internet.")
+        button_press_time=datetime.now().time()
+        button_press_date=datetime.now().date()
+        print("-------Status Running-----")
+        #strat_time=time()
+        #intervals=60
+        while True:
+            #current_time=time()
+            #elapsed_time=current_time-start_time
+            #if elapsed_time>=intervals:
+                data3_to_send={
+                "doctype":"Sytemstatus",
+                "status":"Running",
+	            "time":button_press_time.strftime("%H:%M"),
+                "date":button_press_date.strftime("%Y-%m-%d"),
+                }
+                api_url=f"{base_url}/api/resource/Systemstatus"
+                response=requests.post(api_url, json=data3_to_send,headers=headers)
+                if response.status_code==200:
+                    print("---Status running Succesfully----")
+                else:
+                    print("Error:", response.text)
+                sleep(600)
+    else:
+        print("system status Not connected to internet")
 
 def decrypt(qr_code):
     parmanent_key = b'OVEluxTreMrz529vuP5Zi5AdCwPo1V8MZ1adFWUJQ2w='
@@ -321,7 +325,7 @@ def main():
                                         buzzer()
                                         threading.Thread(target=toggle_relay).start()
                                         if is_connected():
-                                            print("Raspberry Pi is connected to the internet.")
+                                            print("main Raspberry Pi is connected to the internet.")
                                             data_to_send={
                                                 "doctype":"qr_logs",
                                                 "id":id1,
@@ -338,7 +342,7 @@ def main():
                                             else:
                                                 print("Error:", "response.text")
                                         else:
-                                            print("Raspberry Pi is not connected to the internet.")
+                                            print("main Raspberry Pi is not connected to the internet.")
                                         
                                     else:
                                         print("invalid time and date")
@@ -360,20 +364,13 @@ def main():
                     else:
                         print("invalid Qr code")
                         red()
+                else:
+                    print("no data found")
     blue.off()
 
 if __name__ == "__main__":
-    if is_connected():
-        print("Raspberry Pi is connected to the internet.")
-        secondary_thread=threading.Thread(target=system_status)
-    else:
-        print("Raspberry Pi is not connected to the internet.")
+    secondary_thread=threading.Thread(target=system_status)
     secondary_thread.daemon=True
     secondary_thread.start()
     main()
     process_other.start()
-
-
-
-
-
